@@ -2,6 +2,23 @@
 // 改动需求改 build-manifest.mjs,然后重跑 `node build-manifest.mjs`。
 const MANIFEST = [
   {
+    "name": "2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
+    "displayName": "2026-06-25-作品管理-AI精品漫-视频制作",
+    "html": "灵翼/v1.3/2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
+    "htmlBasename": "2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
+    "md": "灵翼/v1.3/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "灵翼/v1.3",
+    "size": 1398975,
+    "sizeStr": "1.3MB",
+    "mtime": 1782375824,
+    "mtimeStr": "06-25 16:23",
+    "group": "",
+    "inline": true,
+    "system": "灵翼",
+    "version": "v1.3"
+  },
+  {
     "name": "Creation-list.inline.html",
     "displayName": "Creation-list",
     "html": "灵翼/V1.1/Creation-list.inline.html",
@@ -39,6 +56,7 @@ const MANIFEST = [
 const SYSTEMS = ["灵翼"];
 const VERSIONS_BY_SYSTEM = {
   "灵翼": [
+    "v1.3",
     "V1.2",
     "V1.1"
   ]
