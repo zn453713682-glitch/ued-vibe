@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="zh-CN" data-vibe-gallery="3">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UED-vibe · 设计陈列</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5.21.0/dist/reset.css">
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js" defer></script>
+  <!-- JSZip：把当前版本全部文件打成单个 zip 下载；file:// 下 fetch 受限，会自动降级为逐个下载 -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
+
+  <style>
+    /* —— antd 5 light token —— */
+    :root {
+      --c-primary:        #1677ff;
+      --c-primary-hover:  #4096ff;
+      --c-primary-active: #0958d9;
+      --c-primary-bg:     #e6f4ff;
+      --c-primary-border: #91caff;
+
+      --c-bg-base:    #ffffff;
+      --c-bg-layout:  #f5f5f5;
+      --c-bg-elev:    #ffffff;
+      --c-bg-hover:   rgba(0, 0, 0, 0.04);
+
+      --c-border:        #d9d9d9;
+      --c-border-split:  #f0f0f0;
+
+      --c-text:   rgba(0, 0, 0, 0.88);
+      --c-text-2: rgba(0, 0, 0, 0.65);
+      --c-text-3: rgba(0, 0, 0, 0.45);
+      --c-text-4: rgba(0, 0, 0, 0.25);
+
+      --r-sm: 4px;
+      --r-md: 6px;
+      --r-lg: 8px;
+
+      --sd-1: 0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02);
+      --sd-2: 0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05);
+      --sd-pop: 0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05);
+
+      --sider-w: 260px;
+      --header-h: 56px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font: 14px/1.5715 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+            "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      background: var(--c-bg-layout);
+      color: var(--c-text);
+      overflow: hidden;
+    }
+    iconify-icon { display: inline-block; vertical-align: -0.125em; }
+
+    /* ============ Pro Layout 主框架 ============ */
+    .pro-layout {
+      display: grid;
+      grid-template-columns: var(--sider-w) 1fr;
+      grid-template-rows: var(--header-h) 1fr;
+      grid-template-areas: "header header" "sider content";
+      height: 100vh;
+      transition: grid-template-columns 0.22s cubic-bezier(0.645,0.045,0.355,1);
+    }
+    /* 收起态：sider 收成 0；logo 缩成只剩 U 标记 */
+    .pro-layout.sider-collapsed { grid-template-columns: 0 1fr; }
+    .pro-layout.sider-collapsed .pro-sider {
+      width: 0;
+      border-right: 0;
+      pointer-events: none;
+    }
+    .pro-layout.sider-collapsed .pro-header .logo {
+      width: 56px;
+      padding: 0 14px;
+    }
+    .pro-layout.sider-collapsed .pro-header .logo .name { display: none; }
+
+    /* ============ Header ============ */
+    .pro-header {
+      grid-area: header;
+      background: var(--c-bg-elev);
+      border-bottom: 1px solid var(--c-border-split);
+      padding: 0 16px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 20;
+    }
+    .pro-header .logo {
+      width: var(--sider-w);
+      height: 100%;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-right: 1px solid var(--c-border-split);
+      flex-shrink: 0;
+      transition: width 0.22s cubic-bezier(0.645,0.045,0.355,1), padding 0.22s;
+      overflow: hidden;
+    }
+    .pro-header .logo .mark {
+      width: 28px; height: 28px;
+      border-radius: var(--r-md);
+      background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 14px;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+    .pro-header .logo .name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--c-text);
+      letter-spacing: 0.2px;
+    }
+    .pro-header .selector-label {
+      color: var(--c-text-3);
+      font-size: 13px;
+      margin-left: 4px;
+    }
+    .pro-header .spacer { flex: 1; }
+    .pro-header .stats {
+      color: var(--c-text-3);
+      font-size: 12px;
+      margin-right: 4px;
+    }
+
+    /* ============ Sider ============ */
+    .pro-sider {
+      grid-area: sider;
+      background: var(--c-bg-elev);
+      border-right: 1px solid var(--c-border-split);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10;
+      transition: width 0.22s cubic-bezier(0.645,0.045,0.355,1), border-right-color 0.22s;
+    }
+
+    /* 收起/展开触发按钮 */
+    .sider-toggle {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--c-text-2);
+      border-radius: var(--r-md);
+      transition: all 0.15s;
+      font-size: 16px;
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+    .sider-toggle:hover { background: var(--c-bg-hover); color: var(--c-text); }
+    .sider-head {
+      padding: 12px 16px 8px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--c-border-split);
+    }
+    .sider-head .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--c-text);
+    }
+    .sider-head .count {
+      font-size: 11px;
+      color: var(--c-text-3);
+      background: var(--c-bg-layout);
+      padding: 0 8px;
+      border-radius: 10px;
+      line-height: 18px;
+    }
+    .sider-search {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--c-border-split);
+    }
+    .sider-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .sider-list .empty-state {
+      padding: 24px 16px;
+      color: var(--c-text-3);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* file item (Menu.Item 风) */
+    .file-item {
+      position: relative;
+      margin: 2px 8px;
+      padding: 10px 12px;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--c-text-2);
+      transition: background 0.15s, color 0.15s;
+    }
+    .file-item:hover { background: var(--c-bg-hover); color: var(--c-text); }
+    .file-item.selected {
+      background: var(--c-primary-bg);
+      color: var(--c-primary);
+    }
+    .file-item .anticon {
+      flex-shrink: 0;
+      font-size: 16px;
+      color: var(--c-text-3);
+    }
+    .file-item.selected .anticon { color: var(--c-primary); }
+    .file-item-body { flex: 1; min-width: 0; }
+    .file-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .file-item-meta {
+      font-size: 11px;
+      color: var(--c-text-3);
+      margin-top: 2px;
+      display: flex;
+      gap: 8px;
+    }
+    .file-item.selected .file-item-meta { color: var(--c-primary); opacity: 0.7; }
+
+    /* ============ ant-select (custom) ============ */
+    .ant-select {
+      position: relative;
+      display: inline-flex;
+      min-width: 140px;
+      height: 32px;
+      user-select: none;
+    }
+    .ant-select-selector {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 11px;
+      background: var(--c-bg-elev);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      color: var(--c-text);
+    }
+    .ant-select:hover .ant-select-selector { border-color: var(--c-primary-hover); }
+    .ant-select.open .ant-select-selector {
+      border-color: var(--c-primary);
+      box-shadow: 0 0 0 2px rgba(5,145,255,0.1);
+    }
+    .ant-select-selection-item {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ant-select-arrow {
+      flex-shrink: 0;
+      font-size: 12px;
+      color: var(--c-text-3);
+      transition: transform 0.2s;
+    }
+    .ant-select.open .ant-select-arrow { transform: rotate(180deg); }
+    .ant-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 100%;
+      max-height: 280px;
+      overflow-y: auto;
+      background: var(--c-bg-elev);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sd-pop);
+      padding: 4px;
+      z-index: 1050;
+    }
+    .ant-select-item {
+      padding: 5px 12px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--c-text);
+      display: flex; align-items: center; gap: 8px;
+      transition: background 0.15s;
+      min-height: 32px;
+    }
+    .ant-select-item:hover { background: var(--c-bg-hover); }
+    .ant-select-item.selected {
+      background: var(--c-primary-bg);
+      color: var(--c-primary);
+      font-weight: 500;
+    }
+    .ant-select-item.selected .check {
+      margin-left: auto;
+      color: var(--c-primary);
+    }
+    .ant-select-item .ver-meta {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--c-text-3);
+    }
+
+    /* ============ Search input ============ */
+    .ant-input-affix-wrapper {
+      width: 100%;
+      padding: 4px 11px;
+      background: var(--c-bg-base);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px;
+      transition: all 0.2s;
+      height: 32px;
+    }
+    .ant-input-affix-wrapper:hover { border-color: var(--c-primary-hover); }
+    .ant-input-affix-wrapper:focus-within {
+      border-color: var(--c-primary);
+      box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    }
+    .ant-input-affix-wrapper .prefix { color: var(--c-text-3); display: flex; }
+    .ant-input-affix-wrapper input {
+      border: 0; outline: none; flex: 1; min-width: 0;
+      background: transparent; color: var(--c-text); font: inherit;
+    }
+    .ant-input-affix-wrapper input::placeholder { color: var(--c-text-3); }
+
+    /* ============ Tag ============ */
+    .ant-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 22px;
+      padding: 0 7px;
+      font-size: 12px;
+      line-height: 20px;
+      border-radius: var(--r-sm);
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .ant-tag-blue   { color: #1677ff; background: #e6f4ff; border-color: #91caff; }
+    .ant-tag-green  { color: #389e0d; background: #f6ffed; border-color: #b7eb8f; }
+    .ant-tag-gold   { color: #d48806; background: #fffbe6; border-color: #ffe58f; }
+    .ant-tag-purple { color: #722ed1; background: #f9f0ff; border-color: #d3adf7; }
+    .ant-tag-cyan   { color: #08979c; background: #e6fffb; border-color: #87e8de; }
+    .ant-tag-default { color: var(--c-text-3); background: #fafafa; border-color: var(--c-border-split); }
+
+    /* ============ Button ============ */
+    .ant-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      padding: 4px 15px;
+      font-size: 14px;
+      line-height: 1.5715;
+      border-radius: var(--r-md);
+      border: 1px solid var(--c-border);
+      background: var(--c-bg-elev);
+      color: var(--c-text);
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.02);
+      transition: all 0.2s cubic-bezier(0.645,0.045,0.355,1);
+    }
+    .ant-btn:hover { color: var(--c-primary-hover); border-color: var(--c-primary-hover); }
+    .ant-btn:active { color: var(--c-primary-active); border-color: var(--c-primary-active); }
+    .ant-btn-primary {
+      background: var(--c-primary);
+      border-color: var(--c-primary);
+      color: #fff;
+      box-shadow: 0 2px 0 rgba(5,145,255,0.1);
+    }
+    .ant-btn-primary:hover { background: var(--c-primary-hover); border-color: var(--c-primary-hover); color: #fff; }
+    .ant-btn-primary:active { background: var(--c-primary-active); border-color: var(--c-primary-active); color: #fff; }
+    .ant-btn-text {
+      border-color: transparent;
+      box-shadow: none;
+      background: transparent;
+    }
+    .ant-btn-text:hover { background: var(--c-bg-hover); color: var(--c-text); border-color: transparent; }
+    .ant-btn-icon-only { width: 32px; padding: 0; }
+    .ant-btn[disabled], .ant-btn.disabled {
+      cursor: not-allowed;
+      color: var(--c-text-4);
+      background: #f5f5f5;
+      border-color: var(--c-border);
+      box-shadow: none;
+      pointer-events: none;
+    }
+    .ant-btn-primary[disabled], .ant-btn-primary.disabled {
+      background: #f5f5f5;
+      border-color: var(--c-border);
+      color: var(--c-text-4);
+    }
+
+    /* ============ Content + iframe ============ */
+    .pro-content {
+      grid-area: content;
+      background: var(--c-bg-layout);
+      min-width: 0;
+      min-height: 0;
+      padding: 16px;
+      display: flex;
+    }
+    .pro-stage {
+      position: relative;
+      flex: 1;
+      background: var(--c-bg-elev);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sd-1);
+      overflow: hidden;
+    }
+    .pro-stage iframe {
+      width: 100%; height: 100%;
+      border: 0;
+      background: #fff;
+      display: block;
+    }
+    .ant-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 0 32px;
+      text-align: center;
+    }
+    .ant-empty-image {
+      width: 184px; height: 100px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ant-empty-description {
+      color: var(--c-text-3);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 520px;
+    }
+    .ant-empty-description strong { color: var(--c-text-2); }
+    .ant-empty-description code {
+      font: 12px/1.4 ui-monospace, SF Mono, Menlo, monospace;
+      background: var(--c-bg-layout);
+      color: var(--c-primary);
+      padding: 1px 6px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--c-border-split);
+    }
+
+    /* Loading Spin */
+    .ant-spin-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 2;
+    }
+    .ant-spin-wrap.show { opacity: 1; }
+    .ant-spin-dot {
+      position: relative;
+      width: 32px; height: 32px;
+      transform: rotate(45deg);
+      animation: antRotate 1.2s linear infinite;
+    }
+    .ant-spin-dot i {
+      position: absolute;
+      width: 14px; height: 14px;
+      background: var(--c-primary);
+      border-radius: 100%;
+      opacity: 0.3;
+      animation: antSpinMove 1s linear infinite alternate;
+      display: block;
+    }
+    .ant-spin-dot i:nth-child(1) { top: 0; left: 0; }
+    .ant-spin-dot i:nth-child(2) { top: 0; right: 0; animation-delay: 0.4s; }
+    .ant-spin-dot i:nth-child(3) { bottom: 0; right: 0; animation-delay: 0.8s; }
+    .ant-spin-dot i:nth-child(4) { bottom: 0; left: 0; animation-delay: 1.2s; }
+    @keyframes antRotate { to { transform: rotate(405deg); } }
+    @keyframes antSpinMove { to { opacity: 1; } }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+
+    /* 小屏兜底 */
+    @media (max-width: 900px) {
+      .pro-layout:not(.sider-collapsed) { grid-template-columns: 200px 1fr; }
+      .pro-layout:not(.sider-collapsed) .pro-header .logo { width: 200px; padding: 0 12px; }
+      .pro-header .selector-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="pro-layout">
+    <!-- ============ Header ============ -->
+    <header class="pro-header">
+      <div class="logo">
+        <div class="mark">U</div>
+        <div class="name">UED-vibe</div>
+      </div>
+
+      <div class="sider-toggle" id="siderToggle" title="收起/展开侧边栏 ([)">
+        <iconify-icon id="siderToggleIcon" icon="ant-design:menu-fold-outlined"></iconify-icon>
+      </div>
+
+      <span class="selector-label">系统</span>
+      <div class="ant-select" id="sysSelect" style="min-width:160px;">
+        <div class="ant-select-selector">
+          <span class="ant-select-selection-item"></span>
+          <span class="ant-select-arrow"><iconify-icon icon="ant-design:down-outlined"></iconify-icon></span>
+        </div>
+        <div class="ant-select-dropdown" hidden></div>
+      </div>
+
+      <span class="selector-label">版本</span>
+      <div class="ant-select" id="verSelect" style="min-width:200px;">
+        <div class="ant-select-selector">
+          <span class="ant-select-selection-item"></span>
+          <span class="ant-select-arrow"><iconify-icon icon="ant-design:down-outlined"></iconify-icon></span>
+        </div>
+        <div class="ant-select-dropdown" hidden></div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <span class="stats" id="stats"></span>
+      <button type="button" class="ant-btn ant-btn-primary" id="dlVer" title="打包下载当前版本下所有 html + md">
+        <iconify-icon icon="ant-design:download-outlined"></iconify-icon>
+        <span id="dlVerLabel">下载文件</span>
+      </button>
+    </header>
+
+    <!-- ============ Sider ============ -->
+    <aside class="pro-sider">
+      <div class="sider-head">
+        <span class="title">当前版本文件</span>
+        <span class="count" id="fileCount">0</span>
+      </div>
+      <div class="sider-search">
+        <div class="ant-input-affix-wrapper">
+          <span class="prefix"><iconify-icon icon="ant-design:search-outlined"></iconify-icon></span>
+          <input id="search" type="text" placeholder="过滤文件名…" autocomplete="off">
+        </div>
+      </div>
+      <nav class="sider-list" id="fileList"></nav>
+    </aside>
+
+    <!-- ============ Content ============ -->
+    <section class="pro-content">
+      <div class="pro-stage">
+        <iframe id="frame" name="frame"></iframe>
+        <div class="ant-spin-wrap" id="spin">
+          <div class="ant-spin-dot"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="ant-empty" id="empty">
+          <div class="ant-empty-image">
+            <svg viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">
+              <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+                <ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7"/>
+                <g fill-rule="nonzero" stroke="#d9d9d9">
+                  <path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"/>
+                  <path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="ant-empty-description">
+            <strong>从左侧选择一份文件预览</strong><br>
+            顶部"系统 / 版本"二级联动，左侧列出该版本下所有 HTML 文件，单击即在右侧 iframe 预览。
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="manifest.js"></script>
+  <script>
+    // MANIFEST / SYSTEMS / VERSIONS_BY_SYSTEM / DEFAULT_BUCKET 由 manifest.js 注入
+    // manifest.js 由 build-manifest.mjs 扫 {系统}/{版本}/ 子目录自动重写
+
+    // ===== 工具 =====
+    const escapeHtml = s => String(s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    const escapeAttr = s => escapeHtml(s);
+
+    // SYSTEMS / VERSIONS_BY_SYSTEM / DEFAULT_BUCKET 来自 manifest.js
+    // 每条 item 自带 system / version 字段(由 build-manifest.mjs 按目录路径填),bucketOf 直接读
+    const SYSTEM_COLOR = { '灵翼': 'blue' };
+
+    function bucketOf(it) {
+      // 优先用 item 自带字段(子目录已表达系统/版本);兜底走 DEFAULT_BUCKET
+      if (it && it.system && it.version) return { system: it.system, version: it.version };
+      return DEFAULT_BUCKET;
+    }
+
+    function parseTree() {
+      const tree = {};
+      SYSTEMS.forEach(s => {
+        tree[s] = {};
+        (VERSIONS_BY_SYSTEM[s] || []).forEach(v => { tree[s][v] = []; });
+      });
+      MANIFEST.forEach((it, idx) => {
+        const { system, version } = bucketOf(it);
+        if (!tree[system]) tree[system] = {};
+        if (!tree[system][version]) tree[system][version] = [];
+        tree[system][version].push({
+          ...it, idx, system, version,
+          // 左侧菜单展示名：去掉 .inline.html / .html 后缀，保留原 displayName
+          fileLabel: it.displayName
+        });
+      });
+      // 每个版本内按 mtime desc
+      Object.values(tree).forEach(verMap => {
+        Object.values(verMap).forEach(arr => arr.sort((a, b) => b.mtime - a.mtime));
+      });
+      return tree;
+    }
+
+    const tree = parseTree();
+
+    function sortedSystems() {
+      return SYSTEMS.filter(s => tree[s]);
+    }
+    function sortedVersions(system) {
+      return (VERSIONS_BY_SYSTEM[system] || []).filter(v => tree[system] && tree[system][v]);
+    }
+
+    // ===== state =====
+    let curSystem = null;
+    let curVersion = null;
+    let curIdx = -1;
+    let filterText = '';
+
+    // ===== DOM refs =====
+    const $sysSelect = document.getElementById('sysSelect');
+    const $verSelect = document.getElementById('verSelect');
+    const $stats     = document.getElementById('stats');
+    const $dlVer     = document.getElementById('dlVer');
+    const $dlVerLabel = document.getElementById('dlVerLabel');
+
+    const $fileList  = document.getElementById('fileList');
+    const $fileCount = document.getElementById('fileCount');
+    const $search    = document.getElementById('search');
+
+    const $frame  = document.getElementById('frame');
+    const $spin   = document.getElementById('spin');
+    const $empty  = document.getElementById('empty');
+
+    // ===== 自定义 Select =====
+    function bindSelect($el, getOptions, getValue, onChange) {
+      const $selector = $el.querySelector('.ant-select-selector');
+      const $item     = $el.querySelector('.ant-select-selection-item');
+      const $dropdown = $el.querySelector('.ant-select-dropdown');
+
+      function render() {
+        const options = getOptions();
+        const value = getValue();
+        const cur = options.find(o => o.value === value);
+        $item.textContent = cur ? cur.label : (options[0] ? options[0].label : '—');
+        $dropdown.innerHTML = options.map(o => {
+          const isSel = o.value === value;
+          const meta = o.meta ? `<span class="ver-meta">${escapeHtml(o.meta)}</span>` : '';
+          const check = isSel ? `<span class="check"><iconify-icon icon="ant-design:check-outlined"></iconify-icon></span>` : '';
+          return `<div class="ant-select-item${isSel ? ' selected' : ''}" data-value="${escapeAttr(o.value)}">
+            <span>${escapeHtml(o.label)}</span>${meta}${check}
+          </div>`;
+        }).join('');
+      }
+
+      $selector.addEventListener('click', e => {
+        e.stopPropagation();
+        // 关闭其它 select
+        document.querySelectorAll('.ant-select.open').forEach(o => {
+          if (o !== $el) {
+            o.classList.remove('open');
+            o.querySelector('.ant-select-dropdown').hidden = true;
+          }
+        });
+        const open = $el.classList.toggle('open');
+        $dropdown.hidden = !open;
+      });
+
+      $dropdown.addEventListener('click', e => {
+        const item = e.target.closest('.ant-select-item');
+        if (!item) return;
+        $el.classList.remove('open');
+        $dropdown.hidden = true;
+        onChange(item.dataset.value);
+      });
+
+      return { render };
+    }
+
+    // 点页面其它地方收起所有 select
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.ant-select.open').forEach(o => {
+        o.classList.remove('open');
+        o.querySelector('.ant-select-dropdown').hidden = true;
+      });
+    });
+
+    const sysSel = bindSelect(
+      $sysSelect,
+      () => sortedSystems().map(s => ({ value: s, label: s })),
+      () => curSystem,
+      v => { changeSystem(v); }
+    );
+    const verSel = bindSelect(
+      $verSelect,
+      () => sortedVersions(curSystem).map(v => {
+        const arr = tree[curSystem][v];
+        const latestMtime = Math.max(...arr.map(x => x.mtime));
+        const meta = `${arr.length} 个文件 · ${arr[0].mtimeStr}`;
+        return { value: v, label: prettyVersion(v), meta };
+      }),
+      () => curVersion,
+      v => { changeVersion(v); }
+    );
+
+    function prettyVersion(v) { return v; }
+
+    // ===== 切换逻辑 =====
+    function changeSystem(system) {
+      if (!tree[system]) return;
+      curSystem = system;
+      const versions = sortedVersions(system);
+      curVersion = versions[0];
+      sysSel.render();
+      verSel.render();
+      renderFileList();
+      // 默认选首个文件
+      const list = currentFiles();
+      if (list.length) selectFile(list[0].idx);
+      else clearStage();
+      updateDownloadBtn();
+    }
+    function changeVersion(version) {
+      if (!tree[curSystem] || !tree[curSystem][version]) return;
+      curVersion = version;
+      verSel.render();
+      renderFileList();
+      const list = currentFiles();
+      if (list.length) selectFile(list[0].idx);
+      else clearStage();
+      updateDownloadBtn();
+    }
+    function currentFiles() {
+      if (!curSystem || !curVersion) return [];
+      const arr = (tree[curSystem] && tree[curSystem][curVersion]) || [];
+      return filterText
+        ? arr.filter(x => x.fileLabel.toLowerCase().includes(filterText)
+                       || x.htmlBasename.toLowerCase().includes(filterText))
+        : arr;
+    }
+
+    // ===== 渲染左侧文件列表 =====
+    function renderFileList() {
+      const list = currentFiles();
+      $fileCount.textContent = list.length;
+      if (!list.length) {
+        $fileList.innerHTML = `<div class="empty-state">${filterText ? '没有匹配的文件' : '该版本下暂无文件'}</div>`;
+        return;
+      }
+      $fileList.innerHTML = list.map(it => {
+        const isSel = it.idx === curIdx;
+        return `<div class="file-item${isSel ? ' selected' : ''}" data-idx="${it.idx}">
+          <span class="anticon"><iconify-icon icon="${it.inline ? 'ant-design:file-zip-outlined' : 'ant-design:file-text-outlined'}"></iconify-icon></span>
+          <div class="file-item-body">
+            <div class="file-item-name" title="${escapeAttr(it.htmlBasename)}">${escapeHtml(it.fileLabel || it.displayName)}</div>
+            <div class="file-item-meta">
+              <span>${it.sizeStr}</span>
+              <span>${it.mtimeStr}</span>
+              ${it.md ? '<span style="color:var(--c-primary);">md ✓</span>' : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      $fileList.querySelectorAll('.file-item').forEach(el => {
+        el.addEventListener('click', () => selectFile(+el.dataset.idx));
+      });
+    }
+
+    // ===== 选中文件 → 右侧 iframe =====
+    function selectFile(idx) {
+      const it = MANIFEST[idx];
+      if (!it) return;
+      curIdx = idx;
+      // 高亮
+      $fileList.querySelectorAll('.file-item').forEach(el => {
+        el.classList.toggle('selected', +el.dataset.idx === idx);
+      });
+      // iframe
+      $empty.style.display = 'none';
+      $spin.classList.add('show');
+      $frame.onload = () => $spin.classList.remove('show');
+      $frame.src = it.html;
+
+      // 统计：当前版本文件数 + 当前文件大小
+      $stats.textContent = `${currentFiles().length} 个文件 · ${it.sizeStr}`;
+    }
+
+    function makeVerFilename(it) {
+      // 下载时在原文件名上追加 "__<version>"，避免不同版本下载同名互相覆盖
+      if (!curVersion) return it.htmlBasename;
+      const stem = it.htmlBasename.replace(/\.inline\.html$/, '').replace(/\.html$/, '');
+      const ext = it.htmlBasename.endsWith('.inline.html') ? '.inline.html' : '.html';
+      return `${stem}__${curVersion}${ext}`;
+    }
+
+    function updateDownloadBtn() {
+      const list = currentFiles();
+      const htmlCount = list.length;
+      const mdCount = list.filter(x => x.md).length;
+      const parts = [];
+      if (htmlCount) parts.push(`${htmlCount} html`);
+      if (mdCount)   parts.push(`${mdCount} md`);
+      const tail = parts.length ? ` (${parts.join(' + ')})` : '';
+      $dlVerLabel.textContent = `下载 ${curVersion} 文件${tail}`;
+      $dlVer.disabled = htmlCount === 0;
+      $dlVer.classList.toggle('disabled', htmlCount === 0);
+    }
+
+    function clearStage() {
+      curIdx = -1;
+      $frame.removeAttribute('src');
+      $empty.style.display = '';
+      $stats.textContent = '0 个文件';
+    }
+
+    // ===== 批量下载当前版本：打成 zip，文件夹名 "<系统>-<版本>" =====
+    // 优先 JSZip 路线（http(s) 下 fetch 拿原文件，folder.file 入袋，blob 触发下载）。
+    // file:// 协议下 fetch 会被 Chrome 拦截，自动回落到逐个 <a download> 方案。
+    async function downloadCurrentVersion() {
+      const list = currentFiles();
+      if (!list.length) return;
+      // 收集 [url, basename] 二元组：每个 html + 有 md 的追一份 md
+      const tasks = [];
+      list.forEach(it => {
+        tasks.push([it.html, it.htmlBasename]);
+        if (it.md) tasks.push([it.md, it.mdBasename]);
+      });
+      const folderName = `${curSystem}-${curVersion}`;
+
+      // 兜底：逐个 <a download>，每份 html 带 __<version> 后缀避免跨版本同名覆盖
+      function fallbackSequential() {
+        list.forEach((it, i) => {
+          const base = i * 2;
+          setTimeout(() => triggerDownload(it.html, makeVerFilename(it)), base * 250);
+          if (it.md) setTimeout(() => triggerDownload(it.md, it.mdBasename), (base + 1) * 250);
+        });
+      }
+      function triggerDownload(url, name) {
+        const a = document.createElement('a');
+        a.href = url; a.download = name; a.style.display = 'none';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      }
+
+      // file:// 下 fetch 基本必失败，直接降级
+      if (location.protocol === 'file:' || typeof JSZip === 'undefined') {
+        fallbackSequential();
+        return;
+      }
+
+      // 打包态：禁用按钮 + 进度
+      const oldLabel = $dlVerLabel.textContent;
+      $dlVer.disabled = true;
+      $dlVer.classList.add('disabled');
+      try {
+        const zip = new JSZip();
+        const folder = zip.folder(folderName);
+        let done = 0;
+        await Promise.all(tasks.map(async ([url, name]) => {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`${name} HTTP ${res.status}`);
+          const buf = await res.arrayBuffer();
+          folder.file(name, buf);
+          done++;
+          $dlVerLabel.textContent = `打包中 ${done}/${tasks.length}`;
+        }));
+        $dlVerLabel.textContent = `生成 zip…`;
+        const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+        const url = URL.createObjectURL(blob);
+        triggerDownload(url, `${folderName}.zip`);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      } catch (err) {
+        console.warn('[zip] 打包失败，降级为逐个下载：', err);
+        fallbackSequential();
+      } finally {
+        $dlVerLabel.textContent = oldLabel;
+        $dlVer.disabled = false;
+        $dlVer.classList.remove('disabled');
+        updateDownloadBtn();  // 重算文案（数量可能因搜索过滤变化）
+      }
+    }
+    document.getElementById('dlVer').addEventListener('click', downloadCurrentVersion);
+
+    // ===== 搜索 =====
+    let searchTimer;
+    $search.addEventListener('input', e => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        filterText = e.target.value.trim().toLowerCase();
+        renderFileList();
+      }, 80);
+    });
+
+    // ===== 键盘 =====
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'IFRAME') return;
+      if (e.target.tagName === 'INPUT') {
+        if (e.key === 'Escape') e.target.blur();
+        return;
+      }
+      const list = currentFiles();
+      if (!list.length) return;
+      const ids = list.map(x => x.idx);
+      const pos = ids.indexOf(curIdx);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (pos < 0) selectFile(ids[0]);
+        else if (pos < ids.length - 1) selectFile(ids[pos + 1]);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (pos > 0) selectFile(ids[pos - 1]);
+      } else if (e.key === 'd' || e.key === 'D') {
+        if (currentFiles().length) $dlVer.click();
+      } else if (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'f')) {
+        e.preventDefault();
+        $search.focus();
+      } else if (e.key === '[') {
+        e.preventDefault();
+        $siderToggle.click();
+      }
+    });
+
+    // ===== Sider 收起/展开 =====
+    const SIDER_KEY = 'vibe-gallery-sider-collapsed';
+    const $layout = document.querySelector('.pro-layout');
+    const $siderToggle = document.getElementById('siderToggle');
+    const $siderToggleIcon = document.getElementById('siderToggleIcon');
+    function setSiderCollapsed(collapsed) {
+      $layout.classList.toggle('sider-collapsed', collapsed);
+      $siderToggleIcon.setAttribute('icon',
+        collapsed ? 'ant-design:menu-unfold-outlined' : 'ant-design:menu-fold-outlined');
+      try { localStorage.setItem(SIDER_KEY, collapsed ? '1' : '0'); } catch (_) {}
+    }
+    $siderToggle.addEventListener('click', () => {
+      setSiderCollapsed(!$layout.classList.contains('sider-collapsed'));
+    });
+    // 恢复上次状态
+    try {
+      if (localStorage.getItem(SIDER_KEY) === '1') setSiderCollapsed(true);
+    } catch (_) {}
+
+    // ===== init =====
+    const systems = sortedSystems();
+    if (systems.length) {
+      changeSystem(systems[0]);
+    } else {
+      sysSel.render(); verSel.render();
+      $stats.textContent = '没有数据';
+    }
+  </script>
+</body>
+</html>
