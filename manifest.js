@@ -17,11 +17,29 @@ const MANIFEST = [
     "inline": true,
     "system": "灵翼",
     "version": "V1.1"
+  },
+  {
+    "name": "2026-06-23-作品管理列表-老黑-v3.inline.html",
+    "displayName": "2026-06-23-作品管理列表-老黑-v3",
+    "html": "灵翼/V1.2/2026-06-23-作品管理列表-老黑-v3.inline.html",
+    "htmlBasename": "2026-06-23-作品管理列表-老黑-v3.inline.html",
+    "md": "灵翼/V1.2/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "灵翼/V1.2",
+    "size": 1376142,
+    "sizeStr": "1.3MB",
+    "mtime": 1782255794,
+    "mtimeStr": "06-24 07:03",
+    "group": "",
+    "inline": true,
+    "system": "灵翼",
+    "version": "V1.2"
   }
 ];
 const SYSTEMS = ["灵翼"];
 const VERSIONS_BY_SYSTEM = {
   "灵翼": [
+    "V1.2",
     "V1.1"
   ]
 };
