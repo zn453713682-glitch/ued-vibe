@@ -41,9 +41,13 @@ function scanLeafDir(absDir, relDir) {
   const entries = fs.readdirSync(absDir, { withFileTypes: true });
   const htmls = entries.filter(e => e.isFile() && /\.html$/i.test(e.name));
   const mdSet = new Set(entries.filter(e => e.isFile() && /\.md$/i.test(e.name)).map(e => e.name));
+  // skill 每个版本目录固定吐一份 vibe-coding.md(版本级说明),所有 html 共享它;同名 md 仍优先
+  const sharedMd = mdSet.has('vibe-coding.md') ? 'vibe-coding.md' : null;
   return htmls.map(h => {
-    const stem = stripExt(h.name);
-    const mdCandidate = [`${stem}.md`, `${stem}.inline.md`].find(c => mdSet.has(c));
+    // 对 inline html 也认 stem(去掉双重 .inline)
+    const baseStem = stripExt(h.name);
+    const stem = baseStem.replace(/\.inline$/i, '');
+    const mdCandidate = [`${baseStem}.md`, `${baseStem}.inline.md`, `${stem}.md`].find(c => mdSet.has(c)) || sharedMd;
     const stat = fs.statSync(path.join(absDir, h.name));
     const htmlRel = relDir === '.' ? h.name : `${relDir}/${h.name}`;
     const mdRel = mdCandidate ? (relDir === '.' ? mdCandidate : `${relDir}/${mdCandidate}`) : null;
