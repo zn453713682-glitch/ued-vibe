@@ -11,16 +11,36 @@ const MANIFEST = [
     "dir": "掌视/v1.1",
     "size": 5487701,
     "sizeStr": "5.2MB",
-    "mtime": 1782545427,
-    "mtimeStr": "06-27 15:30",
+    "mtime": 1782547185.1023486,
+    "mtimeStr": "06-27 15:59",
     "group": "",
     "inline": true,
     "system": "掌视",
     "version": "v1.1"
+  },
+  {
+    "name": "作品管理.inline.html",
+    "displayName": "作品管理",
+    "html": "灵翼/v1.4/作品管理.inline.html",
+    "htmlBasename": "作品管理.inline.html",
+    "md": "灵翼/v1.4/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "灵翼/v1.4",
+    "size": 1372971,
+    "sizeStr": "1.3MB",
+    "mtime": 1782547179,
+    "mtimeStr": "06-27 15:59",
+    "group": "",
+    "inline": true,
+    "system": "灵翼",
+    "version": "v1.4"
   }
 ];
-const SYSTEMS = ["掌视"];
+const SYSTEMS = ["灵翼","掌视"];
 const VERSIONS_BY_SYSTEM = {
+  "灵翼": [
+    "v1.4"
+  ],
   "掌视": [
     "v1.1"
   ]
