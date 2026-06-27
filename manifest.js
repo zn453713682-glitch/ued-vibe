@@ -2,81 +2,27 @@
 // 改动需求改 build-manifest.mjs,然后重跑 `node build-manifest.mjs`。
 const MANIFEST = [
   {
-    "name": "作品管理.inline.html",
-    "displayName": "作品管理",
-    "html": "灵翼/v1.4/作品管理.inline.html",
-    "htmlBasename": "作品管理.inline.html",
-    "md": "灵翼/v1.4/vibe-coding.md",
+    "name": "workbench.inline.html",
+    "displayName": "workbench",
+    "html": "掌视/v1.1/workbench.inline.html",
+    "htmlBasename": "workbench.inline.html",
+    "md": "掌视/v1.1/vibe-coding.md",
     "mdBasename": "vibe-coding.md",
-    "dir": "灵翼/v1.4",
-    "size": 1372971,
-    "sizeStr": "1.3MB",
-    "mtime": 1782386706,
-    "mtimeStr": "06-25 19:25",
+    "dir": "掌视/v1.1",
+    "size": 5487701,
+    "sizeStr": "5.2MB",
+    "mtime": 1782539331,
+    "mtimeStr": "06-27 13:48",
     "group": "",
     "inline": true,
-    "system": "灵翼",
-    "version": "v1.4"
-  },
-  {
-    "name": "2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
-    "displayName": "2026-06-25-作品管理-AI精品漫-视频制作",
-    "html": "灵翼/v1.3/2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
-    "htmlBasename": "2026-06-25-作品管理-AI精品漫-视频制作.inline.html",
-    "md": "灵翼/v1.3/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "灵翼/v1.3",
-    "size": 1398975,
-    "sizeStr": "1.3MB",
-    "mtime": 1782375824,
-    "mtimeStr": "06-25 16:23",
-    "group": "",
-    "inline": true,
-    "system": "灵翼",
-    "version": "v1.3"
-  },
-  {
-    "name": "Creation-list.inline.html",
-    "displayName": "Creation-list",
-    "html": "灵翼/V1.1/Creation-list.inline.html",
-    "htmlBasename": "Creation-list.inline.html",
-    "md": "灵翼/V1.1/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "灵翼/V1.1",
-    "size": 1369356,
-    "sizeStr": "1.3MB",
-    "mtime": 1782354293,
-    "mtimeStr": "06-25 10:24",
-    "group": "",
-    "inline": true,
-    "system": "灵翼",
-    "version": "V1.1"
-  },
-  {
-    "name": "2026-06-23-作品管理列表-老黑-v3.inline.html",
-    "displayName": "2026-06-23-作品管理列表-老黑-v3",
-    "html": "灵翼/V1.2/2026-06-23-作品管理列表-老黑-v3.inline.html",
-    "htmlBasename": "2026-06-23-作品管理列表-老黑-v3.inline.html",
-    "md": "灵翼/V1.2/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "灵翼/V1.2",
-    "size": 1376142,
-    "sizeStr": "1.3MB",
-    "mtime": 1782255794,
-    "mtimeStr": "06-24 07:03",
-    "group": "",
-    "inline": true,
-    "system": "灵翼",
-    "version": "V1.2"
+    "system": "掌视",
+    "version": "v1.1"
   }
 ];
-const SYSTEMS = ["灵翼"];
+const SYSTEMS = ["掌视"];
 const VERSIONS_BY_SYSTEM = {
-  "灵翼": [
-    "v1.4",
-    "v1.3",
-    "V1.2",
-    "V1.1"
+  "掌视": [
+    "v1.1"
   ]
 };
-const DEFAULT_BUCKET = {"system":"灵翼","version":"v1.0"};
+const DEFAULT_BUCKET = {"system":"掌视","version":"v1.0"};

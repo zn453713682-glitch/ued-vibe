@@ -3,9 +3,9 @@
  * 扫 ROOT 下的 {系统}/{版本}/*.html + *.md，输出 manifest.js
  * 目录约定:
  *   ued-vibe/
- *   ├── 灵翼/v1.0/foo.inline.html
- *   ├── 灵翼/v1.0/foo.md
- *   ├── 灵翼/v1.1/...
+ *   ├── 掌视/v1.0/foo.inline.html
+ *   ├── 掌视/v1.0/foo.md
+ *   ├── 掌视/v1.1/...
  *   └── 其它系统/v2.0/...
  *
  * 顶层散文件(老布局,如 index.html 同级的 .inline.html)兜底进 DEFAULT_BUCKET。
@@ -18,7 +18,7 @@ const ROOT = path.resolve(process.argv[2] || '.');
 // 扫描时跳过的顶层目录(脚手架/不属于业务文件)
 const SKIP_TOP = new Set(['.git', 'node_modules', '.github', '.vscode', '.idea']);
 // 兜底分桶:顶层散落的 *.html / *.md 全归到这里
-const DEFAULT_BUCKET = { system: '灵翼', version: 'v1.0' };
+const DEFAULT_BUCKET = { system: '掌视', version: 'v1.0' };
 
 // ----- 工具 -----
 const fmtSize = n => {
