@@ -2,23 +2,6 @@
 // 改动需求改 build-manifest.mjs,然后重跑 `node build-manifest.mjs`。
 const MANIFEST = [
   {
-    "name": "workbench.inline.html",
-    "displayName": "workbench",
-    "html": "掌视/v1.1/workbench.inline.html",
-    "htmlBasename": "workbench.inline.html",
-    "md": "掌视/v1.1/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "掌视/v1.1",
-    "size": 5487701,
-    "sizeStr": "5.2MB",
-    "mtime": 1782547185.1023486,
-    "mtimeStr": "06-27 15:59",
-    "group": "",
-    "inline": true,
-    "system": "掌视",
-    "version": "v1.1"
-  },
-  {
     "name": "作品管理.inline.html",
     "displayName": "作品管理",
     "html": "灵翼/v1.4/作品管理.inline.html",
@@ -28,12 +11,46 @@ const MANIFEST = [
     "dir": "灵翼/v1.4",
     "size": 1372971,
     "sizeStr": "1.3MB",
-    "mtime": 1782547179,
-    "mtimeStr": "06-27 15:59",
+    "mtime": 1782551973.846244,
+    "mtimeStr": "06-27 17:19",
     "group": "",
     "inline": true,
     "system": "灵翼",
     "version": "v1.4"
+  },
+  {
+    "name": "workbench.inline.html",
+    "displayName": "workbench",
+    "html": "掌视/v1.1/workbench.inline.html",
+    "htmlBasename": "workbench.inline.html",
+    "md": "掌视/v1.1/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "掌视/v1.1",
+    "size": 5487701,
+    "sizeStr": "5.2MB",
+    "mtime": 1782551973.8411064,
+    "mtimeStr": "06-27 17:19",
+    "group": "",
+    "inline": true,
+    "system": "掌视",
+    "version": "v1.1"
+  },
+  {
+    "name": "workbench.inline.html",
+    "displayName": "workbench",
+    "html": "掌视/v1.2/workbench.inline.html",
+    "htmlBasename": "workbench.inline.html",
+    "md": "掌视/v1.2/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "掌视/v1.2",
+    "size": 5487701,
+    "sizeStr": "5.2MB",
+    "mtime": 1782545427,
+    "mtimeStr": "06-27 15:30",
+    "group": "",
+    "inline": true,
+    "system": "掌视",
+    "version": "v1.2"
   }
 ];
 const SYSTEMS = ["灵翼","掌视"];
@@ -42,6 +59,7 @@ const VERSIONS_BY_SYSTEM = {
     "v1.4"
   ],
   "掌视": [
+    "v1.2",
     "v1.1"
   ]
 };
