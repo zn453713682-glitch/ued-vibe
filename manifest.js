@@ -11,29 +11,12 @@ const MANIFEST = [
     "dir": "灵翼/v1.4",
     "size": 1372971,
     "sizeStr": "1.3MB",
-    "mtime": 1782551973.846244,
-    "mtimeStr": "06-27 17:19",
+    "mtime": 1782715982.6117496,
+    "mtimeStr": "06-29 14:53",
     "group": "",
     "inline": true,
     "system": "灵翼",
     "version": "v1.4"
-  },
-  {
-    "name": "workbench.inline.html",
-    "displayName": "workbench",
-    "html": "掌视/v1.1/workbench.inline.html",
-    "htmlBasename": "workbench.inline.html",
-    "md": "掌视/v1.1/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "掌视/v1.1",
-    "size": 5487701,
-    "sizeStr": "5.2MB",
-    "mtime": 1782551973.8411064,
-    "mtimeStr": "06-27 17:19",
-    "group": "",
-    "inline": true,
-    "system": "掌视",
-    "version": "v1.1"
   },
   {
     "name": "workbench.inline.html",
@@ -45,17 +28,52 @@ const MANIFEST = [
     "dir": "掌视/v1.2",
     "size": 5487701,
     "sizeStr": "5.2MB",
-    "mtime": 1782545427,
-    "mtimeStr": "06-27 15:30",
+    "mtime": 1782715982.6033752,
+    "mtimeStr": "06-29 14:53",
     "group": "",
     "inline": true,
     "system": "掌视",
     "version": "v1.2"
+  },
+  {
+    "name": "workbench.inline.html",
+    "displayName": "workbench",
+    "html": "掌视/v1.1/workbench.inline.html",
+    "htmlBasename": "workbench.inline.html",
+    "md": "掌视/v1.1/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "掌视/v1.1",
+    "size": 5487701,
+    "sizeStr": "5.2MB",
+    "mtime": 1782715982.5912812,
+    "mtimeStr": "06-29 14:53",
+    "group": "",
+    "inline": true,
+    "system": "掌视",
+    "version": "v1.1"
+  },
+  {
+    "name": "灵翼整站.inline.html",
+    "displayName": "灵翼整站",
+    "html": "灵翼/v1.5/灵翼整站.inline.html",
+    "htmlBasename": "灵翼整站.inline.html",
+    "md": "灵翼/v1.5/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "灵翼/v1.5",
+    "size": 1401379,
+    "sizeStr": "1.3MB",
+    "mtime": 1782715978,
+    "mtimeStr": "06-29 14:52",
+    "group": "",
+    "inline": true,
+    "system": "灵翼",
+    "version": "v1.5"
   }
 ];
 const SYSTEMS = ["灵翼","掌视"];
 const VERSIONS_BY_SYSTEM = {
   "灵翼": [
+    "v1.5",
     "v1.4"
   ],
   "掌视": [
