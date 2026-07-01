@@ -2,40 +2,6 @@
 // 改动需求改 build-manifest.mjs,然后重跑 `node build-manifest.mjs`。
 const MANIFEST = [
   {
-    "name": "爆款库.inline.html",
-    "displayName": "爆款库",
-    "html": "掌擎/v13.4.1/爆款库.inline.html",
-    "htmlBasename": "爆款库.inline.html",
-    "md": "掌擎/v13.4.1/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "掌擎/v13.4.1",
-    "size": 1352804,
-    "sizeStr": "1.3MB",
-    "mtime": 1782719257.5475445,
-    "mtimeStr": "06-29 15:47",
-    "group": "",
-    "inline": true,
-    "system": "掌擎",
-    "version": "v13.4.1"
-  },
-  {
-    "name": "AI创意文案衍生.inline.html",
-    "displayName": "AI创意文案衍生",
-    "html": "掌擎/v13.4.1/AI创意文案衍生.inline.html",
-    "htmlBasename": "AI创意文案衍生.inline.html",
-    "md": "掌擎/v13.4.1/vibe-coding.md",
-    "mdBasename": "vibe-coding.md",
-    "dir": "掌擎/v13.4.1",
-    "size": 1323249,
-    "sizeStr": "1.3MB",
-    "mtime": 1782719257.5301359,
-    "mtimeStr": "06-29 15:47",
-    "group": "",
-    "inline": true,
-    "system": "掌擎",
-    "version": "v13.4.1"
-  },
-  {
     "name": "灵翼整站.inline.html",
     "displayName": "灵翼整站",
     "html": "灵翼/v1.5/灵翼整站.inline.html",
@@ -45,12 +11,29 @@ const MANIFEST = [
     "dir": "灵翼/v1.5",
     "size": 1401379,
     "sizeStr": "1.3MB",
-    "mtime": 1782719111.9926672,
-    "mtimeStr": "06-29 15:45",
+    "mtime": 1782871685.5482748,
+    "mtimeStr": "07-01 10:08",
     "group": "",
     "inline": true,
     "system": "灵翼",
     "version": "v1.5"
+  },
+  {
+    "name": "作品管理.inline.html",
+    "displayName": "作品管理",
+    "html": "灵翼/v1.4/作品管理.inline.html",
+    "htmlBasename": "作品管理.inline.html",
+    "md": "灵翼/v1.4/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "灵翼/v1.4",
+    "size": 1372971,
+    "sizeStr": "1.3MB",
+    "mtime": 1782871685.5463932,
+    "mtimeStr": "07-01 10:08",
+    "group": "",
+    "inline": true,
+    "system": "灵翼",
+    "version": "v1.4"
   },
   {
     "name": "workbench.inline.html",
@@ -62,8 +45,8 @@ const MANIFEST = [
     "dir": "掌视/v1.2",
     "size": 5487701,
     "sizeStr": "5.2MB",
-    "mtime": 1782698368.2547965,
-    "mtimeStr": "06-29 09:59",
+    "mtime": 1782871685.5431736,
+    "mtimeStr": "07-01 10:08",
     "group": "",
     "inline": true,
     "system": "掌视",
@@ -79,32 +62,66 @@ const MANIFEST = [
     "dir": "掌视/v1.1",
     "size": 5487701,
     "sizeStr": "5.2MB",
-    "mtime": 1782551036.577524,
-    "mtimeStr": "06-27 17:03",
+    "mtime": 1782871685.5311174,
+    "mtimeStr": "07-01 10:08",
     "group": "",
     "inline": true,
     "system": "掌视",
     "version": "v1.1"
   },
   {
-    "name": "作品管理.inline.html",
-    "displayName": "作品管理",
-    "html": "灵翼/v1.4/作品管理.inline.html",
-    "htmlBasename": "作品管理.inline.html",
-    "md": "灵翼/v1.4/vibe-coding.md",
+    "name": "爆款库.inline.html",
+    "displayName": "爆款库",
+    "html": "掌擎/v13.4.1/爆款库.inline.html",
+    "htmlBasename": "爆款库.inline.html",
+    "md": "掌擎/v13.4.1/vibe-coding.md",
     "mdBasename": "vibe-coding.md",
-    "dir": "灵翼/v1.4",
-    "size": 1372971,
+    "dir": "掌擎/v13.4.1",
+    "size": 1352804,
     "sizeStr": "1.3MB",
-    "mtime": 1782461025.3651743,
-    "mtimeStr": "06-26 16:03",
+    "mtime": 1782871685.5199397,
+    "mtimeStr": "07-01 10:08",
     "group": "",
     "inline": true,
-    "system": "灵翼",
-    "version": "v1.4"
+    "system": "掌擎",
+    "version": "v13.4.1"
+  },
+  {
+    "name": "AI创意文案衍生.inline.html",
+    "displayName": "AI创意文案衍生",
+    "html": "掌擎/v13.4.1/AI创意文案衍生.inline.html",
+    "htmlBasename": "AI创意文案衍生.inline.html",
+    "md": "掌擎/v13.4.1/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "掌擎/v13.4.1",
+    "size": 1323249,
+    "sizeStr": "1.3MB",
+    "mtime": 1782871685.5167212,
+    "mtimeStr": "07-01 10:08",
+    "group": "",
+    "inline": true,
+    "system": "掌擎",
+    "version": "v13.4.1"
+  },
+  {
+    "name": "pipeline-test.inline.html",
+    "displayName": "pipeline-test",
+    "html": "掌游/v0.2-test/pipeline-test.inline.html",
+    "htmlBasename": "pipeline-test.inline.html",
+    "md": "掌游/v0.2-test/vibe-coding.md",
+    "mdBasename": "vibe-coding.md",
+    "dir": "掌游/v0.2-test",
+    "size": 5459588,
+    "sizeStr": "5.2MB",
+    "mtime": 1782871677,
+    "mtimeStr": "07-01 10:07",
+    "group": "",
+    "inline": true,
+    "system": "掌游",
+    "version": "v0.2-test"
   }
 ];
-const SYSTEMS = ["灵翼","掌擎","掌视"];
+const SYSTEMS = ["灵翼","掌擎","掌视","掌游"];
 const VERSIONS_BY_SYSTEM = {
   "灵翼": [
     "v1.5",
@@ -116,6 +133,9 @@ const VERSIONS_BY_SYSTEM = {
   "掌视": [
     "v1.2",
     "v1.1"
+  ],
+  "掌游": [
+    "v0.2-test"
   ]
 };
 const DEFAULT_BUCKET = {"system":"掌视","version":"v1.0"};
