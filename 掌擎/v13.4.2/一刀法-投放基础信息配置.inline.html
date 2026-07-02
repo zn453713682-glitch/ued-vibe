@@ -2938,7 +2938,7 @@
             { key: 'diy', label: '自定义受众', disabled: true, configured: false },
             { key: 'adStatus', label: '广告状态', disabled: true, configured: false },
             { key: 'pixel', label: 'Pixel像素代码', disabled: true, configured: false },
-            { key: 'page', label: '公共主页', disabled: true, configured: false },
+            { key: 'page', label: '公共主页', disabled: false, configured: false },
             { key: 'callback', label: '自定义回传', disabled: true, configured: false },
             { key: 'schedule', label: '排期', disabled: false, configured: false },
           ],
@@ -2968,9 +2968,18 @@
         },
         rebackPage() { history.back(); },
         cfg(key) {
-          const m = { adInfo: '广告基本信息', area: '地区组', aud: '受众组', creative: '创意组',
-            textTitle: '正文标题', website: '目标网址', schedule: '排期', delivery: '投放配置' };
-          this.$message.info('「' + (m[key] || key) + '」配置弹窗 / 抽屉 —— 下一轮细化');
+          // 有独立 html 的抽屉：新标签打开
+          const urlMap = {
+            creative: '一刀法-创意组配置.html',
+            textTitle: '一刀法-正文标题配置.html',
+            delivery: '一刀法-投放配置.html',
+          };
+          if (urlMap[key]) { window.open(urlMap[key], '_blank'); return; }
+          const auxMap = { page: '一刀法-公共主页配置.html' };
+          if (auxMap[key]) { window.open(auxMap[key], '_blank'); return; }
+          const m = { adInfo: '广告基本信息', area: '地区组', aud: '受众组',
+            website: '目标网址', schedule: '排期', pixel: 'Pixel像素代码', adStatus: '广告状态' };
+          this.$message.info('「' + (m[key] || key) + '」配置 —— 下一轮细化');
         },
         showTemplate() { this.$message.info('模板管理面板 —— 下一轮细化'); },
       },
